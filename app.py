@@ -5,6 +5,8 @@ import tempfile
 from h2ogpte import H2OGPTE
 import logging
 from fpdf import FPDF
+from datetime import datetime
+
 
 # Silence everything except your own logger
 for noisy_logger in ['h2ogpte', 'urllib3', 'h2o', 'werkzeug', 'asyncio']:
@@ -90,7 +92,7 @@ async def serve(q: Q):
                 ui.text_xl('Upload Medical Document'),
                 ui.file_upload(
                     name='document_upload',
-                    label='Choose file',
+                    label='Generate Interpretation',
                     multiple=False  
                 ),
                 ui.text_xs('Supported formats: PDF, JPG, PNG, TXT')
@@ -141,7 +143,7 @@ async def serve(q: Q):
             )
             
             q.page['analysis'] = ui.form_card(
-                box='1 8 12 6',
+                box='1 8 12 4',
                 items=[
                     ui.text_xl('GPTe Analysis Results'),
                     ui.text_l(f'Document: {q.client.file_name}'),
@@ -182,71 +184,17 @@ async def serve(q: Q):
             )
 
     if q.args.download_button:
-        analysis_text = q.args.analysis_text
-        
-        # Create a professional PDF without patient information
-        from fpdf import FPDF
-        from datetime import datetime
-        
-        class PDF(FPDF):
-            def header(self):
-                # Company name/logo in header
-                self.set_font('Arial', 'B', 20)
-                self.set_text_color(25, 82, 118)  # Dark blue color
-                self.cell(0, 10, 'MEDICAL ASSOCIATES', 0, 1, 'C')
-                self.set_font('Arial', 'B', 15)
-                self.set_text_color(0, 0, 0)  # Black color
-                self.cell(0, 10, 'Medical Report', 0, 1, 'C')
-                # Line break
-                self.ln(5)
-                # Add a horizontal line
-                self.set_draw_color(200, 200, 200)
-                self.line(10, self.get_y(), 200, self.get_y())
-                self.ln(10)
-            
-            def footer(self):
-                # Add a horizontal line
-                self.set_draw_color(200, 200, 200)
-                self.line(10, 270, 200, 270)
-                # Position at 1.5 cm from bottom
-                self.set_y(-15)
-                # Arial italic 8
-                self.set_font('Arial', 'I', 8)
-                self.set_text_color(128, 128, 128)  # Gray color
-                # Disclaimer text
-                self.cell(0, 10, 'This report was interpreted by AI and may be incorrect. Please consult with your healthcare provider.', 0, 0, 'C')
-        
-        # Create PDF instance
-        pdf = PDF()
-        pdf.set_auto_page_break(auto=True, margin=15)
-        pdf.add_page()
-        
-        # Add only the date
-        pdf.set_font('Arial', 'B', 12)
-        pdf.cell(0, 10, f"Date: {datetime.now().strftime('%B %d, %Y')}", 0, 1)
-        pdf.ln(5)
-        
-        # Add the analysis text with better formatting
-        pdf.set_font('Arial', '', 12)
-        
-        # Process the text paragraph by paragraph for better formatting
-        paragraphs = analysis_text.split('\n\n')
-        for para in paragraphs:
-            if para.strip():
-                # Check if this looks like a heading (all caps or ends with colon)
-                if para.isupper() or para.rstrip().endswith(':'):
-                    pdf.set_font('Arial', 'B', 12)
-                    pdf.multi_cell(0, 10, para)
-                    pdf.set_font('Arial', '', 12)
-                else:
-                    pdf.multi_cell(0, 10, para)
-                pdf.ln(5)
-        
-        # Generate a generic filename with timestamp
+
+        # GPTe already returns HTML
+        html_string = q.args.analysis_text  # This should be full HTML from GPTe
+
+        # Generate a filename with timestamp
         report_filename = f"medical_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-        pdf.output(report_filename)
-        
-        # Upload to Wave server and provide download link
+
+        # Convert HTML to PDF
+        HTML(string=html_string).write_pdf(report_filename)
+
+        # Upload PDF to Wave server and provide download link
         download_path, = await q.site.upload([report_filename])
         q.page['download'] = ui.form_card(
             box='1 15 12 1',
@@ -255,6 +203,7 @@ async def serve(q: Q):
                 ui.link(label='Download Medical Report', path=download_path, download=True, button=True, target='_blank')
             ]
         )
+
 
     if q.args.regenerate_button:
         if q.client.file_path:
