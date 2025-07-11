@@ -370,7 +370,7 @@ async def serve(q: Q):
             q.page['notification'] = ui.form_card(
                 box='1 7 12 1',
                 items=[
-                    ui.message_bar(type='success', text=f'Successfully processed {len(file_names)} file(s):\n{uploaded_list}')
+                    ui.message_bar(type='success', text=f'Successfully processed {len(file_names)} file(s)')
                 ]
             )
 
@@ -434,10 +434,10 @@ async def serve(q: Q):
                 # Upload PDF to Wave server and provide download link
                 download_path, = await q.site.upload([pdf_filename])
                 q.page['download'] = ui.form_card(
-                    box='1 15 12 1',
+                    box='1 15 12 3',
                     items=[
                         ui.message_bar(type='success', text='Medical report generated successfully!'),
-                        ui.link(label='Download Medical Report PDF', path=download_path, download=True, button=True, target='_blank')
+                        ui.link(label='Download Medical Report PDF', path=download_path,button=True,download=True)
                     ]
                 )
                 
