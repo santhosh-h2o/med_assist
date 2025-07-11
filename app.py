@@ -20,7 +20,7 @@ logger.setLevel(logging.DEBUG)
 
 # GPTe configuration
 GPTE_ENDPOINT = "https://h2ogpte.internal.dedicated.h2o.ai"
-KEY = "sk-Mf20Y6GGRi9VWsATBFoqZK4HvXw3bI0FcFFJDiaHTXonPcxg"  
+KEY = "--"  
 
 def analyze_uploaded_documents(file_paths):
     """Analyze multiple uploaded documents and return a structured report"""
