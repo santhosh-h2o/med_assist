@@ -1,7 +1,7 @@
 
 # Med Assist – AI-Powered Medical Report Summarizer for Doctors
 
-<img width="547" height="416" alt="image" src="https://github.com/user-attachments/assets/19a4e108-77b5-4bd4-b24c-778b26685308" />
+<img width="638" height="485" alt="image" src="https://github.com/user-attachments/assets/19a4e108-77b5-4bd4-b24c-778b26685308" />
 
 ## Sample Report
 
