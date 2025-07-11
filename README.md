@@ -12,7 +12,7 @@ Med Assist is a tool built to help doctors quickly understand and explain comple
 
 We know many people are starting to use AI to interpret their own medical test results. But that can be dangerous and misleading without proper medical guidance. This tool is designed specifically for doctors so they can save time and provide AI-generated summaries that are reviewed and verified by medical professionals.
 
-How It Works:
+## How It Works:
 1. Upload one or more lab reports (PDF, JPG, PNG, TXT).
 2. Click “Generate Analysis”.
 3. The AI reads the document(s) and gives you a clear, human-readable summary.
@@ -20,12 +20,12 @@ How It Works:
 5. Not happy with the result? Click “Regenerate Analysis”.
 6. Once you're satisfied, click “Download” to get a clean, downloadable PDF report.
 
-Verified by Doctors:
+## Verified by Doctors:
 These summaries are not meant for patients to interpret on their own. They are AI-generated, but reviewed and refined by doctors — so patients can trust that the final explanation is medically accurate.
 
-Future Plans:
+## Future Plans:
 - Batch Mode: Doctors will soon be able to connect object storage (like S3 or GCP buckets) to automatically process multiple reports.
 - Prompt Customization: Doctors can define their own prompts to tailor the AI output to their needs.
 
-Why Med Assist?
+## Why Med Assist?
 Because doctors deserve AI tools built for their workflow — not generic chatbots. Med Assist bridges that gap: fast, safe, and built for real clinical use.
